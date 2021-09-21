@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,11 +15,12 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/', function (){
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/profile/', [ProfileController::class, 'index'])->name('profile');
+Route::get('/profile/', [ProfileController::class, 'index'])->name('profile');
+
+//Route::get('/profile/{id}', [ProfileController::class, 'index'])->name('profile');
