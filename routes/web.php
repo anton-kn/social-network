@@ -14,11 +14,11 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/login', [LoginController::class, 'index']);
-Route::post('/login', [LoginController::class, 'authenticate']);
-
-Route::get('/signup', function (){
-    return view('signup', [
-        'title' => 'Регистрация'
-    ]);
+Route::get('/', function (){
+    return view('home');
 });
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
