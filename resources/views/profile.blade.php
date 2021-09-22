@@ -9,8 +9,8 @@
             <div class="position-absolute top-0 start-0 border border-1 w-25 p-3">
                 <h2>Содержание</h2>
                 <div class="comment">
+                    <a href="">Мои коментарии</a><br/>
                     <a href="">Удалить все коментарии</a><br/>
-                    <a href="">Мои коментарии</a>
                 </div>
                 <div class="users">
                     <h4>Все пользователи</h4>
@@ -20,7 +20,7 @@
             </div>
             <div class="position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Коментарии</h2>
-                <form type="POST" action="">
+                <form type="POST" action="{{ route('profile') }}">
                     @csrf
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Заголовок</label>

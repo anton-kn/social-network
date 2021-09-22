@@ -25,11 +25,4 @@ class ProfileController extends Controller
     {
         return view('profile');
     }
-
-    public function userProfile($id)
-    {
-        return view('profile', [
-            'user' => User::findOrFail($id),
-        ]);
-    }
 }
