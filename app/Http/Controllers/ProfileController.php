@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 
 /*
  * Профиль пользователя
@@ -16,13 +18,37 @@ class ProfileController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+
     public function index()
     {
-        return view('profile');
+//        dd(User::all()[0]->name);
+        /* Записываем id текущего пользователя */
+        return view('profile', [
+            'users' => User::all()
+        ]);
+    }
+
+    public function add(Request $request, $id = null)
+    {
+        $request->validate([
+            'topic' => 'required',
+            'comment' => 'required'
+        ]);
+
+        if($id){
+            $userId = $id;
+        }
+        else{
+            $userId = Auth::id();
+        }
+
+        Comment::create([
+            'user_id' => $userId,  // кому написали
+            'author_id' => Auth::id(), // автор комментария
+            'topic' => $request->topic,
+            'comment' => $request->comment
+        ]);
+
+        return redirect('/profile');
     }
 }
