@@ -24,7 +24,8 @@ class ProfileController extends Controller
 //        dd(User::all()[0]->name);
         /* Записываем id текущего пользователя */
         return view('profile', [
-            'users' => User::all()
+            'users' => User::all(),
+            'comments' => User::all()[1]->comments(),
         ]);
     }
 
