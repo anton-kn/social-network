@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="m-4">
+    <div class="content m-4">
         <div class="pricing-header p-3 pb-md-4 mx-auto">
             {{-- Имя текущего профиля--}}
             <h2 class="fw-normal">Страница {{ $pageUser->name }}</h2>
         </div>
         <div class="position-relative h-auto">
             <x-side-panel :users="$users"/>
-            <div class="position-absolute top-0 end-0 border border-1 w-75 p-3">
+            <div class="comment_main position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Коментарии</h2>
                 @if(session('status'))
                     <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('status') }}</div>
@@ -16,7 +16,9 @@
                 @if(session('errorExist'))
                     <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('errorExist') }}</div>
                 @endif
-
+                @if(session('statusComment'))
+                    <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('statusComment') }}</div>
+                @endif
                 <form method="post" action="{{ route('profile.addComment', ['id' => $pageUser->id]) }}">
                     @csrf
                     <div class="mb-3">
@@ -44,9 +46,6 @@
                 @foreach($comments as $comment)
                     {{-- Отображаем только комметарии --}}
                     @if($comment->comment_id == null)
-                        @if(session('statusComment'))
-                            <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('statusComment') }}</div>
-                        @endif
                         {{-- Блок для комментария --}}
                         <div class="comment border border-1 m-2 p-3">
                             <div class="topic">
@@ -68,6 +67,7 @@
                             <a class="btn btn-link"
                                href="/profile/replay/{{ $comment->id}}">Ответить</a>
                         </div>
+                        {{-- Отображаем комметарии через ajax --}}
                     @endif
                     {{-- Отображаем ответы к комметарию --}}
                     @foreach($commentsAll as $replay)
@@ -88,7 +88,10 @@
                             </div>
                         @endif
                     @endforeach
+                            {{-- Отображаем ответы к комметарию через ajax--}}
                 @endforeach
+                {{-- Остальная чать подгружается с помощью ajax --}}
+                {{--<x-page-additional-data/>--}}
             </div>
         </div>
     </div>

@@ -19,15 +19,18 @@ class UserController extends Controller
     {
         /* Выполнить проверку на существования id */
         $userId = ($id!=null) ?  $id :  Auth::id();
+//        dd(User::find($userId)->comments()->where('comment_id', '=', null)->get()->count());
+//        dd(User::find($userId)->comments->take(5));
 //        dd($userId);
         return view('profile', [
             'users' => User::all(),
             /* Все комментарии */
-            'comments' => User::find($userId)->comments,
-            /* Страница пользователя */
+            'comments' => User::find($userId)->comments->take(5),
+            /* Страница текущего пользователя */
             'pageUser' => User::find($userId),
             /* ответы на комметарии */
-            'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get()
+            'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get(),
+            'countComments' => User::find($userId)->comments()->where('comment_id', '=', null)->get()->count()
         ]);
     }
 

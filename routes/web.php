@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\ReplayController;
 use Illuminate\Support\Facades\Route;
-//use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,15 +28,16 @@ Route::delete('/profile/{comment}', [UserController::class, 'destroy'])->name('p
 Route::delete('/profile/replay/{replayId}', [UserController::class, 'destroyReplay'])->name('profile.destroyReplay');
 Route::get('/profile/deleting/user/comments/{id}', [UserController::class, 'deletingUserComments']);
 
+/* загружаем данные с помощью Ajax */
+Route::get('/profile/additional/data/{id?}', [CommentController::class, 'store']);
 
 Route::get('/profile/user/comments', [UserController::class, 'showComments']);
-
 
 Route::get('/profile/replay/{commentId}', [ReplayController::class, 'index']);
 Route::post('/profile/replay/add/{commentId}', [ReplayController::class, 'addReplay'])->name('replay.addReplay');
 
 
-//Route::get('/test', [TestController::class, 'test']);
-//Route::get('/test/hello', [TestController::class, 'exapmleAjax']);
+Route::get('/test', [TestController::class, 'test']);
+Route::get('/test/hello/{id}', [TestController::class, 'exapmleAjax']);
 
 

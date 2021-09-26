@@ -13,16 +13,20 @@ class TestController extends Controller
         return view('test');
     }
 
-    public function exapmleAjax()
+    public function exapmleAjax($id)
     {
-        $comments = Comment::get();
+//        $comments = Comment::find($id);
         $data = [];
-        foreach ($comments as $comment){
-            $data[] = [
-                'topic' => $comment->topic,
-                'comment' => $comment->comment
-            ];
-        }
+//        foreach ($comments as $comment){
+//            $data[] = [
+//                'topic' => $comment->topic,
+//                'comment' => $comment->comment
+//            ];
+//        }
+        $data[] = [
+            'id' => User::find($id)->id,
+            'name' => User::find($id)->name
+        ];
         return response()->json($data);
 
     }
