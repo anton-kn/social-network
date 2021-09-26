@@ -15,3 +15,5 @@ yarn-error.log
 /.vscode
 /app/Http/Controllers/TestController.php
 /app/Http/Models/Test.php
+/resources/views/test.blade.php
+

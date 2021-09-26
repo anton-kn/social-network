@@ -15,45 +15,94 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index($id = null)
     {
+        /* Выполнить проверку на существования id */
         $userId = ($id!=null) ?  $id :  Auth::id();
+//        dd($userId);
         return view('profile', [
             'users' => User::all(),
             /* Все комментарии */
             'comments' => User::find($userId)->comments,
             /* Страница пользователя */
             'pageUser' => User::find($userId),
+            /* ответы на комметарии */
+            'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get()
         ]);
     }
 
-    public function addComment(Request $request, $id = null)
+    /* Добавляем комментарий */
+    public function addComment(Request $request, $id)
     {
+        /* id - номер пользователя, для которого пише комментарий */
+
+        /* Выполнить проверку на сущестрования id */
         $request->validate([
             'topic' => 'required',
             'comment' => 'required'
         ]);
 
+        /* Проверка на сущестования пользователя с таким id */
+        if($id != null) // комментарий добавляем не на свою страницу
+        {
+            $existId = User::find(6);
+            if($existId == null || $existId == false ){
+                return back()->with('errorExist', 'Нет такого пользователя');
+            }
+        }
+
         $userId = ($id!=null) ?  $id :  Auth::id();
+
         /* Добавляем комментарий */
         $comment = new CommentController();
-        $comment->add($request, $userId);
-
+        $comment->add($request, $id);
         /* Переходим на страницу, где оставили комментарий */
         return back();
-    }
-
-    /* Ответ на комментарий */
-    public function replay()
-    {
-        return "replay";
     }
 
     /* Удаляем комметарий */
     public function destroy(Comment $comment)
     {
+        /* id комментария */
+        $commentId = $comment->id;
+        /* Поиск ответов на этот комментарий (результат id ответов) */
+        $repliesToComment = $comment::where('comment_id', $commentId)->get();
+        /* Удаление ответов  на этот комментарий */
+        foreach ($repliesToComment as $replay){
+            $comment::destroy($replay->id);
+        }
+        /* Удаляем сам комментарий */
         $comment->delete();
-        return back();
+        return back()->with('statusComment', 'Комментарий удален');
     }
+
+    /* Удаляем Ответ на комментарий */
+    public function destroyReplay(Comment $comment, $replayId)
+    {
+        $comment::destroy($replayId);
+        return back()->with('statusReplay', 'Комментарий удален');
+    }
+
+    /* Удаляем все комментарии */
+    public function deletingUserComments($userId)
+    {
+        /* Все комментарии пользователя */
+        $commentAll = User::find($userId)->comments;
+        /* Удаляем все комментарии */
+        foreach ($commentAll as $comment) {
+            $comment->delete();
+        }
+        return back()->with('status', 'Все комментарии удалены');
+    }
+
+    /* Все комментарии авторизованного пользователя */
+    public function showComments()
+    {
+        return view('page-comments', [
+            'users' => User::all(),
+            /* Все комментарии */
+            'comments' => User::find(Auth::id())->comments,
+        ]);
+    }
+
 }

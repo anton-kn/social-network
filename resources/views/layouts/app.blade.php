@@ -20,6 +20,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 </head>
 <body>
     <div id="app">
@@ -81,5 +84,8 @@
             @yield('content')
         </main>
     </div>
+        <a id="button" href="#" class="m-2 btn btn-info position-fixed bottom-0 end-0 col-1">Вниз</a>
+
+    <script src="/js/ajax.js"></script>
 </body>
 </html>
