@@ -45,7 +45,7 @@ class UserController extends Controller
         /* Проверка на сущестования пользователя с таким id */
         if($id != null) // комментарий добавляем не на свою страницу
         {
-            $existId = User::find(6);
+            $existId = User::find($id);
             if($existId == null || $existId == false ){
                 return back()->with('errorExist', 'Нет такого пользователя');
             }
