@@ -95,16 +95,22 @@ function load()
     let buttonLoad = document.querySelector('#button_load');
     /* url страница пользователя */
     let endString = window.location.pathname.slice(-1);
-    let url = '/profile/additional/data/' + endString;
-// let url = '/profile/additional/data/1';
 
-    console.log('/profile/additional/data/' + endString);
+    /* Преобразуем конец строки в число */
+    let num = Number(endString);
+    /* Формируем url */
+    let url = '/profile/additional/data/';
+    if (Number.isInteger(num)) {
+        url = '/profile/additional/data/' + num;
+    }
+    console.log("URL: " + url);
+
     let promise = createRequest(url);
     promise.then(
         data => {
             /* Перебираем данные json */
             data.forEach((item)=>{
-                console.log(item);
+                // console.log(item);
                 /* заполняем данные */
                 fillData(item);
             });

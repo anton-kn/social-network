@@ -83,6 +83,7 @@
             @yield('content')
         </main>
     </div>
+    {{-- Показываем кнопку, если есть статьи и их количество больше 5 шт. --}}
     @if(isset($countComments) && $countComments > 5)
         <button style="display: block" id="button_load" onclick="load()" class="m-2 btn btn-info position-fixed bottom-0 end-0
         col-1">Вниз</button>

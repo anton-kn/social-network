@@ -52,14 +52,12 @@ class CommentController extends Controller
             $data = [];
             foreach ($comments as $comment)
             {
-//            dd(Comment::find($comment->id)->comment_id == null);
                 /* Что бы отдельно не записывать комментарии
                 * проверяем имеется ли запись в столбце commend_id,
                 * если нет до формируем json
                 */
                 if(Comment::find($comment->id)->comment_id == null)
                 {
-//                $data[] = Comment::find($comment->id)->id;
                     /* Комментарии и ответы к комментариям */
                     $data[] =
                         [

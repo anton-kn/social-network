@@ -7,7 +7,7 @@
             <h2 class="fw-normal">Страница {{ $pageUser->name }}</h2>
         </div>
         <div class="position-relative h-auto">
-            <x-side-panel :users="$users"/>
+            <x-side-panel :users="$users" :pageUser="$pageUser"/>
             <div class="comment_main position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Коментарии</h2>
                 @if(session('status'))

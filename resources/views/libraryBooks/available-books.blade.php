@@ -4,9 +4,7 @@
     <div class="container py-3">
         <header>
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-                <h1 class="display-4 fw-normal">Социальная сеть</h1>
-                <p class="fs-5 text-muted">Социальная сеть с использованием Laravel</p>
-                <a href="{{ route('show-books-all') }}">Библиотека книг</a>
+                <h1 class="display-4 fw-normal">Библиотека книг</h1>
             </div>
         </header>
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
@@ -18,4 +16,3 @@
         </footer>
     </div>
 @endsection
-

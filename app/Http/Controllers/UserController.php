@@ -30,12 +30,13 @@ class UserController extends Controller
             'pageUser' => User::find($userId),
             /* ответы на комметарии */
             'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get(),
+            /* количество комментариев */
             'countComments' => User::find($userId)->comments()->where('comment_id', '=', null)->get()->count()
         ]);
     }
 
     /* Добавляем комментарий */
-    public function addComment(Request $request, $id)
+    public function addComment(CommentController $comment, Request $request, $id)
     {
         /* id - номер пользователя, для которого пише комментарий */
 
@@ -55,9 +56,8 @@ class UserController extends Controller
         }
 
         $userId = ($id!=null) ?  $id :  Auth::id();
-
         /* Добавляем комментарий */
-        $comment = new CommentController();
+        // $comment = new CommentController();
         $comment->add($request, $id);
         /* Переходим на страницу, где оставили комментарий */
         return back();

@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\AccessBookController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,7 +39,35 @@ Route::get('/profile/replay/{commentId}', [ReplayController::class, 'index']);
 Route::post('/profile/replay/add/{commentId}', [ReplayController::class, 'addReplay'])->name('replay.addReplay');
 
 
-Route::get('/test', [TestController::class, 'test']);
-Route::get('/test/hello/{id}', [TestController::class, 'exapmleAjax']);
+/* Библиотека с книгами */
+Route::get('/library/books', [BookController::class, 'index'])->name('books');
+/* Новая книга */
+Route::get('/library/book', [BookController::class, 'book'])->name('book');
+Route::post('/library/new/book', [BookController::class, 'newBook'])->name('new-book');
+/* Читаем книгу */
+Route::get('/library/read/book/{id}', [BookController::class, 'read'])->name('read-book');
+/* Редактируем книгу */
+Route::get('/library/edit/book/{id}', [BookController::class, 'edit'])->name('edit-book');
+Route::post('/library/edit/book/{id}', [BookController::class, 'change'])->name('change-book');
+
+/* Удаляем книгу */
+Route::get('/library/remove/book/{id}', [BookController::class, 'remove'])->name('remove-book');
+
+/* Устанавливаем доступ к библиотекам */
+Route::get('/library/access/enable/books/{clientId}', [AccessBookController::class, 'enable'])
+->name('enable-access-books');
+Route::get('/library/access/disable/books/{clientId}', [AccessBookController::class, 'disable'])
+->name('disable-access-books');
+
+/*Книги доступны всем*/
+Route::get('/library/books/all/{bookId}', [BookController::class, 'accessBookAll'])
+		->name('access-book-all');
+
+Route::get('/library/show/books', [BookController::class, 'showBooksAll'])
+		->middleware('availablebook')
+		->name('show-books-all');
+
+/*Route::get('/test', [TestController::class, 'test']);
+Route::get('/test/hello/{id}', [TestController::class, 'exapmleAjax']);*/
 
 
