@@ -25,6 +25,13 @@
             @else
                 <a class="btn btn-success" href="{{ route('enable-access-books', ['clientId' => $pageUser->id]) }}">Дать доступ к библиотеке</a>
             @endif
+            {{-- Доступные библиотеки книг других пользователей --}}
         </div>
     @endif
+    <h4>Дополнительные библиотеки</h4>
+    @foreach($users as $user)
+        @if(Auth::id() != $user->id )
+            <a href="/library/other/books/{{ $user->id }}">Библиотека {{ $user->name }}</a><br/>
+        @endif
+    @endforeach
 </div>

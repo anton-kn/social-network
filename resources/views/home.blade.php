@@ -6,7 +6,9 @@
             <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
                 <h1 class="display-4 fw-normal">Социальная сеть</h1>
                 <p class="fs-5 text-muted">Социальная сеть с использованием Laravel</p>
-                <a href="{{ route('show-books-all') }}">Библиотека книг</a>
+            </div>
+            <div class="lists-books">
+                <a class="link-success fs-5" href="{{ route('show-books-all') }}">Библиотека книг</a>
             </div>
         </header>
         <footer class="pt-4 my-md-5 pt-md-5 border-top">

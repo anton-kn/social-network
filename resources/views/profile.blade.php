@@ -13,9 +13,6 @@
                 @if(session('status'))
                     <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('status') }}</div>
                 @endif
-                @if(session('errorExist'))
-                    <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('errorExist') }}</div>
-                @endif
                 @if(session('statusComment'))
                     <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('statusComment') }}</div>
                 @endif

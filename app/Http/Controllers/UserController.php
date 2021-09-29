@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\CommentController;
 use App\Models\Comment;
+use App\Models\AccessBook;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +17,17 @@ class UserController extends Controller
 
     public function index($id = null)
     {
-        /* Выполнить проверку на существования id */
+
+        /* Выполнить проверку на наличие id */
         $userId = ($id!=null) ?  $id :  Auth::id();
-//        dd(User::find($userId)->comments()->where('comment_id', '=', null)->get()->count());
-//        dd(User::find($userId)->comments->take(5));
-//        dd($userId);
+        
+        // $this->checkUser($userId);
+        $user = User::where('id' , '=' , $userId)->first();
+         // Проверка существования книги у текущего пользователя
+        if($user == null){
+            return back();
+        }
+
         return view('profile', [
             'users' => User::all(),
             /* Все комментарии */
@@ -31,37 +37,11 @@ class UserController extends Controller
             /* ответы на комметарии */
             'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get(),
             /* количество комментариев */
-            'countComments' => User::find($userId)->comments()->where('comment_id', '=', null)->get()->count()
+            'countComments' => User::find($userId)->comments()->where('comment_id', '=', null)->get()->count(),
+            // 'accesses' => AccessBook::where('client_id', '=', Auth::id())->get()
         ]);
     }
 
-    /* Добавляем комментарий */
-    public function addComment(CommentController $comment, Request $request, $id)
-    {
-        /* id - номер пользователя, для которого пише комментарий */
-
-        /* Выполнить проверку на сущестрования id */
-        $request->validate([
-            'topic' => 'required',
-            'comment' => 'required'
-        ]);
-
-        /* Проверка на сущестования пользователя с таким id */
-        if($id != null) // комментарий добавляем не на свою страницу
-        {
-            $existId = User::find($id);
-            if($existId == null || $existId == false ){
-                return back()->with('errorExist', 'Нет такого пользователя');
-            }
-        }
-
-        $userId = ($id!=null) ?  $id :  Auth::id();
-        /* Добавляем комментарий */
-        // $comment = new CommentController();
-        $comment->add($request, $id);
-        /* Переходим на страницу, где оставили комментарий */
-        return back();
-    }
 
     /* Удаляем комметарий */
     public function destroy(Comment $comment)
@@ -89,6 +69,13 @@ class UserController extends Controller
     /* Удаляем все комментарии */
     public function deletingUserComments($userId)
     {
+
+        $user = User::where('id' , '=' , $userId)->first();
+         // Проверка существования книги у текущего пользователя
+        if($user == null){
+            return back();
+        }
+
         /* Все комментарии пользователя */
         $commentAll = User::find($userId)->comments;
         /* Удаляем все комментарии */

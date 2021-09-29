@@ -12,30 +12,84 @@ class CommentController extends Controller
 {
     use HasFactory;
 
-    public function add($request, $id)
+    public function __construct()
     {
+        $this->middleware('auth');
+    }
+
+    /* начальная загрузка */
+    public function index($commentId)
+    {
+        return view('replay', [
+            'users' => User::all(),
+            /* комментарии */
+            'comment' => Comment::find($commentId),
+        ]);
+    }
+
+    /* Добавляем комментарий */
+    public function addComment(Request $request, $id)
+    {
+        /* id - номер пользователя, для которого записываем комментарий */
+
+        /* Выполнить проверку на сущестрования id */
+        $request->validate([
+            'topic' => 'required',
+            'comment' => 'required'
+        ]);
+
+        $userId = ($id!=null) ?  $id :  Auth::id();
+
+        $user = User::where('id' , '=' , $userId)->first();
+         // Проверка существования книги у текущего пользователя
+        if($user == null){
+            return back();
+        }
+        /* Добавляем комментарий */
+        // $comment = new CommentController();
         Comment::create([
-            'user_id' => $id,  // кому написали
+            'user_id' => $userId,  // кому написали
             'author_id' => Auth::id(), // автор комментария
             'topic' => $request->topic,
             'comment' => $request->comment
         ]);
+        /* Переходим на страницу, где оставили комментарий */
+        return back();
     }
 
     /* записываем ответ к комментарию */
     /* Функция принимает id комметария, для
     которого записываем ответ
      */
-    public function replayToComment(Request $request, $commentId)
+    public function addReplay(Request $request, $id)
     {
+        $request->validate([
+            'topic' => 'required',
+            'comment' => 'required'
+        ]);
+
+        $comment = Comment::where('id' , '=' , $id)->first();
+         // Проверка существования книги у текущего пользователя
+        if($comment == null){
+            return back();
+        }
+
         $comment = new Comment();
-        $comment->user_id = Comment::find($commentId)->user->id;  // кому написали
+        $comment->user_id = Comment::find($id)->user->id;  // кому написали
         $comment->author_id = Auth::id(); // автор комментария
-        $comment->comment_id = $commentId;  // для какого комментария написан ответ
+        $comment->comment_id = $id;  // для какого комментария написан ответ
         $comment->topic = $request->topic;
         $comment->comment = $request->comment;
         $comment->save();
+
+        // $comment = new CommentController();
+        // $comment->replayToComment($request, $id);
+
+        /* Переходим обратно на страницу пользователя */
+        $user = Comment::find($id)->user->id;
+        return redirect('profile/' . $user);
     }
+
 
     public function store(Request $request, $id = null)
     {
@@ -43,6 +97,14 @@ class CommentController extends Controller
         $token = $request->session()->token();
 
         $userId = ($id!=null) ?  $id :  Auth::id();
+
+        $user = User::where('id' , '=' , $userId)->first();
+         // Проверка существования книги у текущего пользователя
+        if($user == null){
+            return back();
+        }
+
+        
         $count = collect(User::find($userId)->comments)->count();
 
         /* Если комментариев больше 5, то показываем остальные комментарии */

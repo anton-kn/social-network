@@ -3,7 +3,7 @@
 @section('content')
     <div class="m-4">
         <div class="position-relative h-auto">
-            <x-side-panel :users="$users"/>
+            <x-side-panel-replay :users="$users"/>
             <div class="position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Ответ на комментарий</h2>
                 <div class="comment border border-1 my-2 p-3">

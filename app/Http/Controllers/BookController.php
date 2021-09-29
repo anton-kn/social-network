@@ -10,17 +10,24 @@ use App\Models\User;
 
 class BookController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     // Список всех книг
-    public function index(Request $request)
+    public function index()
     {
         // dd($request->path());
         return view('libraryBooks.books', 
             [
                 'books' => User::find(Auth::id())->books,
+            ]);
+    }
+
+    /* Книги других пользователей */
+    public function booksOther($userId)
+    {
+        $this->checkUser($userId);
+
+        return view('libraryBooks.books-other', 
+            [
+                'books' => User::find($userId)->books,
             ]);
     }
 
@@ -55,10 +62,7 @@ class BookController extends Controller
 
         return view('libraryBooks.edit-book', [
             'book' => $book,
-        ]);
-        
-
-        
+        ]);   
     }
 
     /* Изменяем книгу */
@@ -123,13 +127,15 @@ class BookController extends Controller
     }
 
     /* Список книг, который доступен всем */
-    public function showBooksAll()
+    public function booksForGuest()
     {
-        $books = Book::where('status' , '=', true);
-        dd($books);
+        $books = Book::where('status' , '=', true)->get();
+        // dd($books);
 
-        return view('available-books', [
-            'books' => $books
+        return view('libraryBooks.available-books', [
+            'books' => $books,
         ]);
     }
+
+
 }
