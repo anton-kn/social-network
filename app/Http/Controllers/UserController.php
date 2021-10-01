@@ -13,32 +13,29 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        parent::__construct();
     }
+
 
     public function index($id = null)
     {
 
         /* Выполнить проверку на наличие id */
         $userId = ($id!=null) ?  $id :  Auth::id();
-        
-        // $this->checkUser($userId);
-        $user = User::where('id' , '=' , $userId)->first();
-         // Проверка существования книги у текущего пользователя
-        if($user == null){
+
+        if (isset($this->user[$userId-1]->id) == false) {
             return back();
         }
 
         return view('profile', [
-            'users' => User::all(),
-            /* Все комментарии */
-            'comments' => User::find($userId)->comments->take(5),
-            /* Страница текущего пользователя */
-            'pageUser' => User::find($userId),
+            /* Все пользователи */
+            'users' => $this->user,
+            /* Текущий пользователь */
+            'currentUser' => $this->user[$userId-1],
             /* ответы на комметарии */
-            'commentsAll' => User::find($userId)->comments()->where('comment_id', '!=', null)->get(),
+            'commentsAll' => $this->user[$userId-1]->comments()->where('comment_id', '!=', null)->get(),
             /* количество комментариев */
-            'countComments' => User::find($userId)->comments()->where('comment_id', '=', null)->get()->count(),
-            // 'accesses' => AccessBook::where('client_id', '=', Auth::id())->get()
+            'countComments' => $this->user[$userId-1]->comments()->where('comment_id', '=', null)->get()->count(),
         ]);
     }
 
@@ -70,14 +67,14 @@ class UserController extends Controller
     public function deletingUserComments($userId)
     {
 
-        $user = User::where('id' , '=' , $userId)->first();
-         // Проверка существования книги у текущего пользователя
-        if($user == null){
+        if (isset($this->user[$userId-1]->id) == false) {
             return back();
         }
 
+
         /* Все комментарии пользователя */
-        $commentAll = User::find($userId)->comments;
+        // $commentAll = User::find($userId)->comments;
+        $commentAll = $this->user[$userId-1]->comments;
         /* Удаляем все комментарии */
         foreach ($commentAll as $comment) {
             $comment->delete();
@@ -89,9 +86,9 @@ class UserController extends Controller
     public function showComments()
     {
         return view('page-comments', [
-            'users' => User::all(),
+            'users' => $this->user,
             /* Все комментарии */
-            'comments' => User::find(Auth::id())->comments,
+            'comments' => $this->user[Auth::id()]->comments,
         ]);
     }
 

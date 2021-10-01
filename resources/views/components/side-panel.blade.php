@@ -16,14 +16,14 @@
         <h4>Библиотека</h4>
         <a href="{{ route('books') }}">Библиотека</a>
     </div>
-    @if($pageUser->id != Auth::id())
+    @if($currentUser->id != Auth::id())
         <div class = "books my-3">
             <h4>Моя библиотека</h4>
             {{-- Проверяем есть ли доступ к библиотеке --}}
-            @if( \App\Models\User::find(Auth::id())->accesses->where('client_id', '=', $pageUser->id)->first() )
-                <a class="btn btn-danger" href="{{ route('disable-access-books', ['clientId' => $pageUser->id]) }}">Отключить доступ к библиотеке</a>
+            @if( \App\Models\User::find(Auth::id())->accesses->where('client_id', '=', $currentUser->id)->first() )
+                <a class="btn btn-danger" href="{{ route('disable-access-books', ['clientId' => $currentUser->id]) }}">Отключить доступ к библиотеке</a>
             @else
-                <a class="btn btn-success" href="{{ route('enable-access-books', ['clientId' => $pageUser->id]) }}">Дать доступ к библиотеке</a>
+                <a class="btn btn-success" href="{{ route('enable-access-books', ['clientId' => $currentUser->id]) }}">Дать доступ к библиотеке</a>
             @endif
             {{-- Доступные библиотеки книг других пользователей --}}
         </div>

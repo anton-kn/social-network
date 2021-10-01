@@ -16,16 +16,13 @@ class AccessBookController extends Controller
     {
         $user = User::where('id', '=', $clientId)->first();
 
-        // dd( $user );
-
-        if($user == null){
-            return back();
+        /* Подключаем доступ к библиотеке */
+        if (isset($user->id) == true) {
+            AccessBook::create([
+                'user_id' => Auth::id(),
+                'client_id' => $user->id
+            ]);
         }
-
-        AccessBook::create([
-            'user_id' => Auth::id(),
-            'client_id' => $user->id
-        ]);
 
         return back();
     }
@@ -33,16 +30,12 @@ class AccessBookController extends Controller
     /* Отключаем доступ к библиотеке */
     public function disable($clientId)
     {
-        // dd( User::find(Auth::id())->accesses->where('client_id', '=', $clientId)->first() );
-
         $user = User::where('id', '=', $clientId)->first();
-
-        if($user == null){
-            return back();
+        /* Если пользователь есть, то удаляем доступ к библиотеке */
+        if (isset($user->id) == true) {
+            $client = AccessBook::where('client_id', '=', $user->id);
+            $client->delete();
         }
-
-        $client = AccessBook::where('client_id', '=', $user->id);
-        $client->delete();
-        return back();
+        return back();     
     }
 }

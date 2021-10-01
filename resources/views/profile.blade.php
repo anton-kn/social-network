@@ -4,10 +4,10 @@
     <div class="content m-4">
         <div class="pricing-header p-3 pb-md-4 mx-auto">
             {{-- Имя текущего профиля--}}
-            <h2 class="fw-normal">Страница {{ $pageUser->name }}</h2>
+            <h2 class="fw-normal">Страница {{ $currentUser->name }}</h2>
         </div>
         <div class="position-relative h-auto">
-            <x-side-panel :users="$users" :pageUser="$pageUser"/>
+            <x-side-panel :users="$users" :currentUser="$currentUser"/>
             <div class="comment_main position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Коментарии</h2>
                 @if(session('status'))
@@ -16,7 +16,7 @@
                 @if(session('statusComment'))
                     <div class="comment border border-1 m-2 p-3" style="color: red">{{ session('statusComment') }}</div>
                 @endif
-                <form method="post" action="{{ route('profile.addComment', ['id' => $pageUser->id]) }}">
+                <form method="post" action="{{ route('profile.addComment', ['id' => $currentUser->id]) }}">
                     @csrf
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Заголовок</label>
@@ -40,7 +40,7 @@
                     </div>
                     <button type="submit" class="btn btn-info" >Отправить</button>
                 </form>
-                @foreach($comments as $comment)
+                @foreach($currentUser->comments->take(5) as $comment)
                     {{-- Отображаем только комметарии --}}
                     @if($comment->comment_id == null)
                         {{-- Блок для комментария --}}
@@ -54,7 +54,7 @@
                             <p>{{ $comment->comment }}</p>
                             {{-- Если текущий пользователь оставил комментарий на чужом профиле
                              или на своем профиле, отображаем кнопку Удалить --}}
-                            @if(Auth::id() == $comment->author_id || Auth::id() == $pageUser->id)
+                            @if(Auth::id() == $comment->author_id || Auth::id() == $currentUser->id)
                                 <form method="post" action="{{ route('profile.destroy', $comment) }}">
                                     @csrf
                                     @method('DELETE')
@@ -74,7 +74,7 @@
                                 <h4>{{ \App\Models\User::find($replay->author_id)->name }}</h4>
                                 <h5>{{ $replay->topic }}</h5>
                                 <p> {{ $replay->comment }} </p>
-                                @if(Auth::id() == $replay->author_id || Auth::id() == $pageUser->id)
+                                @if(Auth::id() == $replay->author_id || Auth::id() == $currentUser->id)
                                     <form method="post" action="
 {{ route('profile.destroyReplay' , ['replayId' => $replay->id]) }}">
                                         @csrf

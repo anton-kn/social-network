@@ -12,12 +12,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function checkUser($id)
+
+    protected $user;
+
+    public function __construct()
     {
-        $user = User::where('id' , '=' , $id)->first();
-         // Проверка существования книги у текущего пользователя
-        if($user == null){
-            return back();
-        }
+        $this->user = User::with(['comments', 'books'])->get();
     }
+
 }

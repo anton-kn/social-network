@@ -2,8 +2,7 @@
 @section('content')
     <div class="m-4">
         <div class="position-relative h-auto">
-            {{--  --}}
-            <x-side-panel :users="$users"/>
+            <x-side-panel-replay :users="$users" />
             <div class="position-absolute top-0 end-0 border border-1 w-75 p-3">
                 <h2>Коментарии</h2>
                 @foreach($comments as $comment)

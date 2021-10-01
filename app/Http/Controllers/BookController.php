@@ -130,8 +130,6 @@ class BookController extends Controller
     public function booksForGuest()
     {
         $books = Book::where('status' , '=', true)->get();
-        // dd($books);
-
         return view('libraryBooks.available-books', [
             'books' => $books,
         ]);
