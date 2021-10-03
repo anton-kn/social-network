@@ -28,7 +28,8 @@ Route::post('/profile/comment/add/{id?}', [CommentController::class, 'addComment
 
 Route::delete('/profile/{comment}', [UserController::class, 'destroy'])->name('profile.destroy');
 Route::delete('/profile/replay/{replayId}', [UserController::class, 'destroyReplay'])->name('profile.destroyReplay');
-Route::get('/profile/deleting/user/comments/{id}', [UserController::class, 'deletingUserComments']);
+// Route::get('/profile/deleting/user/comments/{id}', [UserController::class, 'deletingUserComments']);
+Route::get('/profile/deleting/user/comments', [UserController::class, 'deletingUserComments']);
 
 /* загружаем данные с помощью Ajax */
 Route::get('/profile/additional/data/{id?}', [CommentController::class, 'store']);

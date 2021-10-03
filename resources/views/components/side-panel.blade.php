@@ -2,7 +2,7 @@
     <h2>Содержание</h2>
     <div class="comment">
         <a href="/profile/user/comments">Мои коментарии</a><br/>
-        <a href="/profile/deleting/user/comments/{{ Auth::id() }}">Удалить все комментарии</a><br/>
+        <a href="/profile/deleting/user/comments">Удалить все комментарии</a><br/>
     </div>
     <div class="users my-2">
         <h4>Все пользователи</h4>

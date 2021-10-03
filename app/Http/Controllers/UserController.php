@@ -19,11 +19,11 @@ class UserController extends Controller
 
     public function index($id = null)
     {
-
+        // dd($this->user->where('id', '=', 1)->first()->comments);
         /* Выполнить проверку на наличие id */
         $userId = ($id!=null) ?  $id :  Auth::id();
 
-        if (isset($this->user[$userId-1]->id) == false) {
+        if (isset($this->user->where('id', '=', $userId)->first()->id) == false) {
             return back();
         }
 
@@ -31,11 +31,19 @@ class UserController extends Controller
             /* Все пользователи */
             'users' => $this->user,
             /* Текущий пользователь */
-            'currentUser' => $this->user[$userId-1],
+            'currentUser' => $this->user->where('id', '=', $userId)->first(),
             /* ответы на комметарии */
-            'commentsAll' => $this->user[$userId-1]->comments()->where('comment_id', '!=', null)->get(),
+            'commentsAll' => $this->user
+                ->where('id', '=', $userId)
+                ->first()
+                ->comments()->where('comment_id', '!=', null)
+                ->get(),
             /* количество комментариев */
-            'countComments' => $this->user[$userId-1]->comments()->where('comment_id', '=', null)->get()->count(),
+            'countComments' => $this->user
+                ->where('id', '=', $userId)->first()
+                ->comments()
+                ->where('comment_id', '=', null)
+                ->get()->count(),
         ]);
     }
 
@@ -46,7 +54,7 @@ class UserController extends Controller
         /* id комментария */
         $commentId = $comment->id;
         /* Поиск ответов на этот комментарий (результат id ответов) */
-        $repliesToComment = $comment::where('comment_id', $commentId)->get();
+        $repliesToComment = $comment->where('comment_id', $commentId)->get();
         /* Удаление ответов  на этот комментарий */
         foreach ($repliesToComment as $replay){
             $comment::destroy($replay->id);
@@ -64,31 +72,45 @@ class UserController extends Controller
     }
 
     /* Удаляем все комментарии */
-    public function deletingUserComments($userId)
+    public function deletingUserComments(Comment $comment)
     {
+        // $userId = ($id!=null) ?  $id :  Auth::id();
 
-        if (isset($this->user[$userId-1]->id) == false) {
+        // dd($this->user->where('id', '=', $userId)->first()->comments);
+        // dd($comment->where('author_id', '=', Auth::id())->get());
+
+        if (isset($this->user->where('id', '=', Auth::id())->first()->id) == true) {
+            /* Все комментарии и ответы на комметарии  пользователя */
+            // $commentAll = User::find($userId)->comments;
+            $commentAll = $this->user->where('id', '=', Auth::id())->first()->comments;
+            /* Удаляем все комментарии */
+            foreach ($commentAll as $comment) {
+                $comment->delete();
+            }
+
+            /* Удаляем все ответы на комметарии */
+            $replayAll = $comment->where('author_id', '=', Auth::id())->get();
+
+            foreach ($replayAll as $replay) {
+                $replay->delete();
+            }
+            return back()->with('status', 'Все комментарии и ответы удалены');
+        }else{
             return back();
         }
-
-
-        /* Все комментарии пользователя */
-        // $commentAll = User::find($userId)->comments;
-        $commentAll = $this->user[$userId-1]->comments;
-        /* Удаляем все комментарии */
-        foreach ($commentAll as $comment) {
-            $comment->delete();
-        }
-        return back()->with('status', 'Все комментарии удалены');
     }
 
-    /* Все комментарии авторизованного пользователя */
-    public function showComments()
+    /* Все комментарии и ответы и ответы авторизованного пользователя */
+    public function showComments(Comment $comment)
     {
         return view('page-comments', [
             'users' => $this->user,
             /* Все комментарии */
-            'comments' => $this->user[Auth::id()]->comments,
+            'comments' => $this->user->where('id', '=', Auth::id())->first()
+                ->comments
+                ->where('comment_id', '=', null),
+            'replays' => $comment->where('author_id', '=', Auth::id())->get()
+                ->where('comment_id', '!=', null)
         ]);
     }
 
