@@ -98,8 +98,9 @@ class CommentController extends Controller
         }
         
         // $count = collect(User::find($userId)->comments)->count();
-        $count = collect($this->user->where('id', '=', $userId)->first()->comments)->count();
-
+        // $count = collect($this->user->where('id', '=', $userId)->first()->comments)->count();
+        $count = $this->user->where('id', '=', $userId)->first()->comments->count();
+        // dd($count);
         /* Если комментариев больше 5, то показываем остальные комментарии */
         if($count > 5) {
             $comments = $this->user->where('id', '=', $userId)->first()->comments->take(5-$count)->all();
